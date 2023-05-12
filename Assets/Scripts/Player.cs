@@ -10,8 +10,17 @@ public class Player : MonoBehaviour
 
     public bool grounded = false;
 
+    public float lastJump = 0.0f;
+
+    public int numJumps = 1;
+    public int jumpsLeft = 1;
+
+    public int contactCheck;
+
     private Rigidbody2D body;
 
+    private ContactPoint2D[] contacts;
+    
     // private Animator anim;
 
     private BoxCollider2D box;
@@ -35,14 +44,43 @@ public class Player : MonoBehaviour
         Vector2 corner1 = new Vector2(max.x, min.y - .1f);
         Vector2 corner2 = new Vector2(min.x, min.y - .2f);
         Collider2D hit = Physics2D.OverlapArea(corner1, corner2);
+        Collider2D[] hits = Physics2D.OverlapAreaAll(corner1, corner2);
 
+        //kinda cringe way to make jumps work properly
+        //checks for any hit, then goes through all hits, checks if the hit is "the ground" using normals, and refreshes jumps if so
+        //if the hit is a wall, does some jank so player doesn't get an extra jump (for some reason)
         grounded = false;
-        if (hit != null) grounded = true;
+        Vector2 norm = Vector2.zero;
+        if(hit != null) {
+            for (int i=0; i<hits.Length; i++) {
+                contacts = new ContactPoint2D[2];
+                contactCheck = hits[i].GetContacts(contacts);
+                if (contactCheck>0) {
+                    for (int j=0; j<contacts.Length; j++) {
+                        norm = contacts[j].normal;
+                        if (norm == Vector2.down) {
+                            grounded = true;
+                            jumpsLeft = numJumps;
+                        } else if (jumpsLeft > numJumps - 1) jumpsLeft = numJumps - 1;
+                    }
+                }
+            }
+        } else {
+            contactCheck = 0;
+            if (jumpsLeft > numJumps - 1) jumpsLeft = numJumps - 1;
+        }
 
         body.gravityScale = (grounded && Mathf.Approximately(deltaX, 0)) ? 0 : 1;
 
-        if (grounded && Input.GetKeyDown(KeyCode.Space)) {
-            body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        //jumps don't need to be grounded by necessity, instead they're tracked and can "run out" until you touch the ground again (explained above)
+        //jumps also don't just add to force, they fully reset vertical velocity
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            if(Time.time - lastJump > 0.4f && jumpsLeft > 0) {
+                lastJump = Time.time;
+                jumpsLeft--;
+                body.velocity = new Vector2(body.velocity.x, 0);
+                body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            }
         }
 
         // MovingPlatform platform = null;
@@ -65,9 +103,9 @@ public class Player : MonoBehaviour
             transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3 / pScale.x, 1 * 3 / pScale.y, 1);
         }
 
-        if(transform.position.y < -10) {
-            Debug.Log("oops you fell, try again");
-            transform.position = new Vector3(0.0f, 0.0f, 1.0f);
-        }
+        // if(transform.position.y < -10) {
+        //     Debug.Log("oops you fell, try again");
+        //     transform.position = new Vector3(0.0f, 0.0f, 1.0f);
+        // }
     }
 }
