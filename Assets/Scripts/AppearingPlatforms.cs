@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class AppearingPlatforms : MonoBehaviour
 {
-    [SerializeField] int jumpsToAppear;
+    [SerializeField] int pickupsToAppear;
+    [SerializeField] string pickupCheck;
     [SerializeField] Player player;
     public SpriteRenderer sprite;
     public BoxCollider2D box;
@@ -13,6 +14,8 @@ public class AppearingPlatforms : MonoBehaviour
     {
         sprite = GetComponent<SpriteRenderer>();
         box = GetComponent<BoxCollider2D>();
+        if(player == null) player = GetComponentInParent<Player>();
+        if(player == null) player = GameObject.Find("Player").GetComponent<Player>();
         sprite.enabled = false;
         if(box != null) box.enabled = false;
     }
@@ -20,9 +23,16 @@ public class AppearingPlatforms : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(player.numJumps >= jumpsToAppear && sprite.enabled == false) {
-            sprite.enabled = true;
-            if(box != null) box.enabled = true;
+        if(pickupCheck == "jumps") {
+            if(player.numJumps >= pickupsToAppear && sprite.enabled == false) {
+                sprite.enabled = true;
+                if(box != null) box.enabled = true;
+            }
+        } else if (pickupCheck == "keys") {
+            if(player.keyCount >= pickupsToAppear && sprite.enabled == false) {
+                sprite.enabled = true;
+                if(box != null) box.enabled = true;
+            }
         }
     }
 }

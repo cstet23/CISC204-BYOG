@@ -10,11 +10,21 @@ public class Player : MonoBehaviour
     public float jumpForce = 15.0f;
 
     public bool grounded = false;
+    public bool reJump = false;
 
     public float lastJump = 0.0f;
+    public float lastTele = 0.0f;
+    public float lastBlink = 0.0f;
 
     public int numJumps = 1;
     public int jumpsLeft = 1;
+
+    public bool teleMe = false;
+
+    public int keyCount = 0;
+    public bool keyGrabbed = false;
+
+    public bool blinkEnabled = false;
 
     public int contactCheck;
 
@@ -22,10 +32,11 @@ public class Player : MonoBehaviour
 
     private ContactPoint2D[] contacts;
     
-    // private Animator anim;
+    private Animator anim;
 
     private BoxCollider2D box;
     // Start is called before the first frame update
+
     void Awake() {
         DontDestroyOnLoad(gameObject);
     }
@@ -33,7 +44,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
-        // anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
         box = GetComponent<BoxCollider2D>();
     }
 
@@ -65,6 +76,7 @@ public class Player : MonoBehaviour
                         norm = contacts[j].normal;
                         if (norm == Vector2.down) {
                             grounded = true;
+                            reJump = false;
                             jumpsLeft = numJumps;
                         } else if (jumpsLeft > numJumps - 1) jumpsLeft = numJumps - 1;
                     }
@@ -83,8 +95,20 @@ public class Player : MonoBehaviour
             if(Time.time - lastJump > 0.4f && jumpsLeft > 0) {
                 lastJump = Time.time;
                 jumpsLeft--;
+                reJump = true;
                 body.velocity = new Vector2(body.velocity.x, 0);
                 body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.E)) {
+            teleMe = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.F)) {
+            if(Time.time - lastBlink > 2.0f) {
+                lastBlink = Time.time;
+                transform.position += new Vector3(Mathf.Sign(deltaX) * 8.0f, 0.0f, 0.0f);
             }
         }
 
@@ -98,8 +122,10 @@ public class Player : MonoBehaviour
             transform.parent = null;
         // }
 
-        // anim.SetFloat("speed", Mathf.Abs(deltaX));
-        // anim.SetBool("grounded", grounded);
+        anim.SetFloat("speed", Mathf.Abs(deltaX));
+        anim.SetBool("grounded", grounded);
+        anim.SetBool("reJump", reJump);
+        reJump = false;
         Vector3 pScale = Vector3.one;
         // if (platform != null) {
         //     pScale = platform.transform.localScale;
@@ -120,5 +146,6 @@ public class Player : MonoBehaviour
         SceneManager.LoadScene(sceneName);
         Debug.Log("Scene switched");
         gameObject.transform.position = new Vector3(-4.0f, -1.0f, -1.0f);
+        //SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName(sceneName));
     }
 }

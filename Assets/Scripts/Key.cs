@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StageExit : MonoBehaviour
+public class Key : MonoBehaviour
 {
-    [SerializeField] string levelTarget;
+    public SpriteRenderer sprite;
     // Start is called before the first frame update
     void Start()
     {
-        
+        sprite = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -18,11 +18,14 @@ public class StageExit : MonoBehaviour
     }
 
     void OnTriggerEnter2D (Collider2D other) {
-        leaveStage(other);
+        if(sprite.enabled) {
+            pickup(other);
+        }
     }
 
-    void leaveStage(Collider2D player) {
+    void pickup(Collider2D player) {
         Player controls = player.GetComponent<Player>();
-        StartCoroutine(controls.switchScenes(levelTarget));
+        controls.keyGrabbed = true;
+        sprite.enabled = false;
     }
 }
