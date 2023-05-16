@@ -26,6 +26,10 @@ public class Player : MonoBehaviour
 
     private BoxCollider2D box;
     // Start is called before the first frame update
+    void Awake() {
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
@@ -115,5 +119,6 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(3);
         SceneManager.LoadScene(sceneName);
         Debug.Log("Scene switched");
+        gameObject.transform.position = new Vector3(-4.0f, -1.0f, -1.0f);
     }
 }
