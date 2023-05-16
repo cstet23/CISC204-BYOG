@@ -6,7 +6,7 @@ public class CamMovement : MonoBehaviour
 {
     public Transform target;
 
-    public float smoothTime = 0.2f;
+    public float smoothTime = 0.1f;
 
     private Vector3 velocity = Vector3.zero;
 

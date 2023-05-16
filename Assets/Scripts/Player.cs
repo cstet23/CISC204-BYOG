@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    public float speed = 4.5f;
+    public float speed = 6.0f;
 
-    public float jumpForce = 12.0f;
+    public float jumpForce = 15.0f;
 
     public bool grounded = false;
 
@@ -107,5 +108,12 @@ public class Player : MonoBehaviour
         //     Debug.Log("oops you fell, try again");
         //     transform.position = new Vector3(0.0f, 0.0f, 1.0f);
         // }
+    }
+
+    public IEnumerator switchScenes(string sceneName) {
+        Debug.Log("Scene getting switched");
+        yield return new WaitForSeconds(3);
+        SceneManager.LoadScene(sceneName);
+        Debug.Log("Scene switched");
     }
 }
