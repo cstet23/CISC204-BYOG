@@ -173,10 +173,10 @@ public class Player : MonoBehaviour
 
     public IEnumerator switchScenes(string sceneName) {
         Debug.Log("Scene getting switched");
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
         SceneManager.LoadScene(sceneName);
         Debug.Log("Scene switched");
-        if(sceneName == "MainMenu") gameObject.transform.position = new Vector3(-18.6f, 0.8f, -1.0f);
+        if(sceneName == "MainMenu" || sceneName == "EndCredits") gameObject.transform.position = new Vector3(-18.6f, 0.8f, -1.0f);
         else gameObject.transform.position = new Vector3(-4.0f, -1.0f, -1.0f);
         //SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName(sceneName));
     }

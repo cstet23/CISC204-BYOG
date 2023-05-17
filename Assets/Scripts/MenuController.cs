@@ -48,6 +48,10 @@ public class MenuController : MonoBehaviour
                     player.transform.position = new Vector3(-4.0f, -1.0f, -1.0f);
                 }
             }
+        } else if (Input.GetKeyDown(KeyCode.Escape)) {
+            SceneManager.LoadScene("MainMenu");
+            player.transform.position = new Vector3(-18.6f, 0.8f, -1.0f);
+            spriteIndex = 0;
         }
         sprRenderer.sprite = sprites[spriteIndex];
     }
