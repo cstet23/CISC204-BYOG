@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] GameObject projectile;
+
     static bool spawned = false;
     public float speed = 6.0f;
 
@@ -16,9 +18,11 @@ public class Player : MonoBehaviour
     public float lastJump = 0.0f;
     public float lastTele = 0.0f;
     public float lastBlink = 0.0f;
+    public float lastProj = 0.0f;
     public float jumpCooldown = 0.3f;
     public float blinkCooldown = 1.7f;
     public float teleCooldown = 1.5f;
+    public float projCooldown = 0.5f;
 
     public int numJumps = 1;
     public int jumpsLeft = 1;
@@ -31,6 +35,8 @@ public class Player : MonoBehaviour
     public bool blinkEnabled = false;
 
     public bool lighterGet = false;
+
+    public int bossKilled = 0;
 
     public int contactCheck;
 
@@ -122,7 +128,20 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && lighterGet) {
             //shoot a projectile
-            Debug.Log("pew pew");
+            if(Time.time - lastProj > projCooldown) {
+                lastProj = Time.time;
+                GameObject proj = Instantiate(projectile) as GameObject;
+                
+                Projectile projInstance = proj.GetComponent<Projectile>();
+                if(Mathf.Sign(deltaX) == -1) {
+                    projInstance.projDir = false;
+                    proj.transform.position = gameObject.transform.position - new Vector3(1.5f, 0.0f, 0.0f);
+                }
+                else if(Mathf.Sign(deltaX) == 1) {
+                    projInstance.projDir = true;
+                    proj.transform.position = gameObject.transform.position + new Vector3(1.5f, 0.0f, 0.0f);
+                }
+            }
         }
 
         // MovingPlatform platform = null;

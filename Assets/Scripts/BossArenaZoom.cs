@@ -5,6 +5,7 @@ using UnityEngine;
 public class BossArenaZoom : MonoBehaviour
 {
     public Camera cam;
+    public Boss boss;
 
     bool sizeUp = false;
 
@@ -15,6 +16,7 @@ public class BossArenaZoom : MonoBehaviour
     void Start()
     {
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+        boss = GameObject.Find("Boss").GetComponent<Boss>();
     }
 
     // Update is called once per frame
@@ -25,13 +27,16 @@ public class BossArenaZoom : MonoBehaviour
             cam.orthographicSize = newCamSize;
             if(endCamSize - cam.orthographicSize < 0.001f) {
                 cam.orthographicSize = endCamSize;
+                boss.horzSpeed = 3.0f;
                 Destroy(gameObject);
             }
         }
     }
     void OnTriggerEnter2D(Collider2D other) {
-        startCamSize = cam.orthographicSize;
-        endCamSize = startCamSize + 5;
-        sizeUp = true;
+        if(other.gameObject.name == "Player") {
+            startCamSize = cam.orthographicSize;
+            endCamSize = 15;
+            sizeUp = true;
+        }
     }
 }

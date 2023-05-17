@@ -33,6 +33,11 @@ public class AppearingPlatforms : MonoBehaviour
                 sprite.enabled = true;
                 if(box != null) box.enabled = true;
             }
+        } else if (pickupCheck == "bossKilled") {
+            if(player.bossKilled >= pickupsToAppear && sprite.enabled == false) {
+                sprite.enabled = true;
+                if(box != null) box.enabled = true;
+            }
         }
     }
 }

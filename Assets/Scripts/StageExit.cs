@@ -18,7 +18,7 @@ public class StageExit : MonoBehaviour
     }
 
     void OnTriggerEnter2D (Collider2D other) {
-        leaveStage(other);
+        if(other.gameObject.name == "Player") leaveStage(other);
     }
 
     void leaveStage(Collider2D player) {

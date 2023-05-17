@@ -18,6 +18,6 @@ public class Trampoline : MonoBehaviour
     }
 
     void OnCollisionEnter2D (Collision2D other) {
-        other.rigidbody.AddForce(Vector2.up * bounceHeight, ForceMode2D.Impulse);
+        if(other.gameObject.name == "Player") other.rigidbody.AddForce(Vector2.up * bounceHeight, ForceMode2D.Impulse);
     }
 }
