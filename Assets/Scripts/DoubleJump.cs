@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DoubleJump : MonoBehaviour
 {
-    [SerializeField] Camera getCam;
+    // [SerializeField] Camera getCam;
     public SpriteRenderer sprite;
     public Camera cam;
 
@@ -17,7 +17,7 @@ public class DoubleJump : MonoBehaviour
     void Start()
     {
         sprite = GetComponent<SpriteRenderer>();
-        cam = getCam.GetComponent<Camera>();
+        cam = GameObject.Find("Main Camera").GetComponent<Camera>();
     }
 
     // Update is called once per frame

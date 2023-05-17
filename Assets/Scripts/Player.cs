@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    static bool spawned = false;
     public float speed = 6.0f;
 
     public float jumpForce = 15.0f;
@@ -15,6 +16,9 @@ public class Player : MonoBehaviour
     public float lastJump = 0.0f;
     public float lastTele = 0.0f;
     public float lastBlink = 0.0f;
+    public float jumpCooldown = 0.3f;
+    public float blinkCooldown = 1.7f;
+    public float teleCooldown = 1.5f;
 
     public int numJumps = 1;
     public int jumpsLeft = 1;
@@ -25,6 +29,8 @@ public class Player : MonoBehaviour
     public bool keyGrabbed = false;
 
     public bool blinkEnabled = false;
+
+    public bool lighterGet = false;
 
     public int contactCheck;
 
@@ -39,6 +45,8 @@ public class Player : MonoBehaviour
 
     void Awake() {
         DontDestroyOnLoad(gameObject);
+        if(spawned) Destroy(gameObject);
+        else spawned = true;
     }
 
     void Start()
@@ -91,8 +99,8 @@ public class Player : MonoBehaviour
 
         //jumps don't need to be grounded by necessity, instead they're tracked and can "run out" until you touch the ground again (explained above)
         //jumps also don't just add to force, they fully reset vertical velocity
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            if(Time.time - lastJump > 0.4f && jumpsLeft > 0) {
+        if (Input.GetKeyDown(KeyCode.W)) {
+            if(Time.time - lastJump > jumpCooldown && jumpsLeft > 0) {
                 lastJump = Time.time;
                 jumpsLeft--;
                 reJump = true;
@@ -105,11 +113,16 @@ public class Player : MonoBehaviour
             teleMe = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.F)) {
-            if(Time.time - lastBlink > 2.0f) {
+        if (Input.GetKeyDown(KeyCode.LeftControl) && blinkEnabled) {
+            if(Time.time - lastBlink > blinkCooldown) {
                 lastBlink = Time.time;
                 transform.position += new Vector3(Mathf.Sign(deltaX) * 8.0f, 0.0f, 0.0f);
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && lighterGet) {
+            //shoot a projectile
+            Debug.Log("pew pew");
         }
 
         // MovingPlatform platform = null;
@@ -134,10 +147,9 @@ public class Player : MonoBehaviour
             transform.localScale = new Vector3(Mathf.Sign(deltaX) * 3 / pScale.x, 1 * 3 / pScale.y, 1);
         }
 
-        // if(transform.position.y < -10) {
-        //     Debug.Log("oops you fell, try again");
-        //     transform.position = new Vector3(0.0f, 0.0f, 1.0f);
-        // }
+        if(transform.position.y < -20) {
+            transform.position = new Vector3(-4.0f, -1.0f, -1.0f);
+        }
     }
 
     public IEnumerator switchScenes(string sceneName) {
@@ -145,7 +157,8 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(3);
         SceneManager.LoadScene(sceneName);
         Debug.Log("Scene switched");
-        gameObject.transform.position = new Vector3(-4.0f, -1.0f, -1.0f);
+        if(sceneName == "MainMenu") gameObject.transform.position = new Vector3(-18.6f, 0.8f, -1.0f);
+        else gameObject.transform.position = new Vector3(-4.0f, -1.0f, -1.0f);
         //SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetSceneByName(sceneName));
     }
 }
