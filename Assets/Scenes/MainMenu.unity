@@ -223,6 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a80890992de36654d8e78ffe5b4b6db7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectile: {fileID: 0}
   speed: 6
   jumpForce: 15
   grounded: 0
@@ -230,15 +231,19 @@ MonoBehaviour:
   lastJump: 0
   lastTele: 0
   lastBlink: 0
+  lastProj: 0
   jumpCooldown: 0.3
   blinkCooldown: 1.7
   teleCooldown: 1.5
+  projCooldown: 0.5
   numJumps: 1
   jumpsLeft: 1
   teleMe: 0
   keyCount: 0
   keyGrabbed: 0
   blinkEnabled: 0
+  lighterGet: 0
+  bossKilled: 0
   contactCheck: 0
 --- !u!50 &55282660
 Rigidbody2D:
@@ -1058,3 +1063,4 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 0ff4f15db5327354591f6a8528ee8c38, type: 3}
   - {fileID: 21300000, guid: b61ea9c725db9414fb6555209633b3e0, type: 3}
   spriteIndex: 0
+  player: {fileID: 0}

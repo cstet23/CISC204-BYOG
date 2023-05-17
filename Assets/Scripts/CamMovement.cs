@@ -20,7 +20,7 @@ public class CamMovement : MonoBehaviour
     }
     void LateUpdate()
     {
-        if(SceneManager.GetActiveScene().name != "MainMenu") {
+        if(SceneManager.GetActiveScene().name != "MainMenu" && SceneManager.GetActiveScene().name != "LevelSelect") {
             Vector3 targetPosition = new Vector3(target.position.x, target.position.y, transform.position.z);
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
         } else transform.position = new Vector3(0.0f, 0.0f, -10.0f);
