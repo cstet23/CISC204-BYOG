@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class CamMovement : MonoBehaviour
 {
     static bool spawned = false;
+    public Camera cam;
     public Transform target;
 
     public float smoothTime = 0.1f;
@@ -18,11 +19,19 @@ public class CamMovement : MonoBehaviour
         if (spawned) Destroy(gameObject);
         else spawned = true;
     }
+
+    void Start() {
+        cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+    }
+
     void LateUpdate()
     {
-        if(SceneManager.GetActiveScene().name != "MainMenu") {
+        if(SceneManager.GetActiveScene().name != "MainMenu" && SceneManager.GetActiveScene().name != "LevelSelect" && SceneManager.GetActiveScene().name != "EndCredits") {
             Vector3 targetPosition = new Vector3(target.position.x, target.position.y, transform.position.z);
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
-        } else transform.position = new Vector3(0.0f, 0.0f, -10.0f);
+        } else {
+            transform.position = new Vector3(0.0f, 0.0f, -10.0f);
+            cam.orthographicSize = 7;
+        }
     }
 }

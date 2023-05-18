@@ -19,22 +19,39 @@ public class MenuController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
             spriteIndex = (spriteIndex + 2) % 3;
-        } else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) {
+        } else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) {
             spriteIndex = (spriteIndex + 1) % 3;
         } else if (Input.GetKeyDown(KeyCode.Return)) {
             if (spriteIndex == 0) {
                 SceneManager.LoadScene("MultiJumpLevel");
                 player.transform.position = new Vector3(-4.0f, -1.0f, -1.0f);
             } else if (spriteIndex == 1) {
-                SceneManager.LoadScene("LevelSelect"); //NOT REAL ATM
+                if(SceneManager.GetActiveScene().name == "MainMenu") {
+                    SceneManager.LoadScene("LevelSelect");
+                    player.transform.position = new Vector3(-18.6f, 0.8f, -1.0f);
+                }
+                else {
+                    SceneManager.LoadScene("PortalLevel");
+                    player.transform.position = new Vector3(-4.0f, -1.0f, -1.0f);
+                }
+
             } else if (spriteIndex == 2) {
-                #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-                #endif
-                Application.Quit();
+                if(SceneManager.GetActiveScene().name == "MainMenu") {
+                    #if UNITY_EDITOR
+                    UnityEditor.EditorApplication.isPlaying = false;
+                    #endif
+                    Application.Quit();
+                } else {
+                    SceneManager.LoadScene("BossLevel");
+                    player.transform.position = new Vector3(-4.0f, -1.0f, -1.0f);
+                }
             }
+        } else if (Input.GetKeyDown(KeyCode.Escape)) {
+            SceneManager.LoadScene("MainMenu");
+            player.transform.position = new Vector3(-18.6f, 0.8f, -1.0f);
+            spriteIndex = 0;
         }
         sprRenderer.sprite = sprites[spriteIndex];
     }
